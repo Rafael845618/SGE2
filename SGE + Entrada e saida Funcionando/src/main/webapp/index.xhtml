@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Login - Sistema de Estoque</title>
+    <h:outputStylesheet>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+        }
+
+        .login-panel {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .login-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+    </h:outputStylesheet>
+</h:head>
+
+<h:body>
+
+    <h:form styleClass="login-container">
+        <p:panel styleClass="login-panel" style="border:none;">
+            <div class="login-title">Login do Sistema de Estoque</div>
+
+            <p:messages autoUpdate="true" closable="true" />
+
+            <div class="login-field">
+                <p:outputLabel for="login" value="Usuário" />
+                <p:inputText id="login" value="#{loginBean.login}" 
+                             placeholder="Digite seu login" 
+                             required="true" styleClass="p-inputtext-lg full-width" />
+            </div>
+
+            <div class="login-field">
+                <p:outputLabel for="senha" value="Senha" />
+                <p:password id="senha" value="#{loginBean.senha}" 
+                            placeholder="Digite sua senha" 
+                            required="true" feedback="false" styleClass="p-inputtext-lg full-width" />
+            </div>
+
+            <p:commandButton value="Entrar" 
+                             action="#{loginBean.logar}" 
+                             icon="pi pi-sign-in" 
+                             styleClass="p-button-rounded p-button-primary p-button-lg full-width" />
+        </p:panel>
+    </h:form>
+
+</h:body>
+</html>

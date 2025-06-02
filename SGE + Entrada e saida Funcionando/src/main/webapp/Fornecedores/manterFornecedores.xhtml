@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cadastro de Fornecedor</title>
+</h:head>
+
+<h:body>
+	<h:form id="formulario">
+
+
+
+		<p:growl id="growl" showDetail="true" />
+
+		<p:toolbar style="margin-top: 20px">
+			<p:toolbarGroup>
+				<h:panelGroup layout="block" style="margin-bottom: 5px ;">
+					<h2>Fornecedores</h2>
+				</h:panelGroup>
+
+
+				<p:commandButton icon="pi pi-arrow-left" value="Voltar"
+					id="botaoVoltar" action="/Opções/opcoes.xhtml?faces-redirect=true"
+					process="@this" style="margin-left: 10px;" />
+
+				<p:commandButton icon="pi pi-plus" value="Novo" id="botaoNovo"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update="editarDialog" process="@this" style="margin-left: 10px;" />
+
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<p:dataTable id="fornecedoresTable" var="fornecedor"
+			showGridlines="true" value="#{manterFornecedorBean.fornecedores}"
+			style="margin-top: 20px" emptyMessage="Nenhum fornecedor encontrado."
+			rows="10" paginator="true" paginatorAlwaysVisible="true"
+			paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+
+			<p:column headerText="Id" style="width: 30px; text-align: center">
+				<h:outputText value="#{fornecedor.id}" />
+			</p:column>
+
+			<p:column headerText="Nome" sortBy="#{fornecedor.nome}"
+				style="width: 95px; text-align: left" filterBy="#{fornecedor.nome}">
+				<h:outputText value="#{fornecedor.nome}" />
+			</p:column>
+
+			<p:column headerText="Telefone" style="width: 95px; text-align: left"
+				filterBy="#{fornecedor.telefone}">
+				<h:outputText value="#{fornecedor.telefone}" />
+			</p:column>
+
+			<p:column headerText="CNPJ"
+				style="width: 95px; 
+			text-align: left"
+				filterBy="#{fornecedor.cnpj}">
+				<h:outputText value="#{fornecedor.cnpj}" />
+			</p:column>
+
+			<p:column headerText="Endereço" style="width: 95px; text-align: left"
+				filterBy="#{fornecedor.endereco}">
+				<h:outputText value="#{fornecedor.endereco}" />
+			</p:column>
+
+
+			<p:column headerText="Opções" style="width: 40px; text-align: center">
+
+				<p:commandButton icon="pi pi-pencil" title="Editar"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update=":formulario:editarDialog" process="@this">
+					<f:setPropertyActionListener
+						target="#{manterFornecedorBean.fornecedor}" value="#{fornecedor}" />
+				</p:commandButton>
+
+				<p:commandButton icon="pi pi-trash" title="Excluir"
+					onclick="PF('confirmacaoExclusao').show();" process="@this">
+					<f:setPropertyActionListener
+						target="#{manterFornecedorBean.fornecedor}" value="#{fornecedor}" />
+				</p:commandButton>
+
+			</p:column>
+
+		</p:dataTable>
+
+		<p:dialog id="editarDialog" header="Fornecedor"
+			widgetVar="editarDialogWidgetVar" modal="true" resizable="true"
+			closeOnEscape="true" showEffect="explode" hideEffect="explode"
+			width="100%" position="center top" maximizable="true" height="70%"
+			fitViewport="true" responsive="true">
+
+			<p:panelGrid id="grid" columns="4">
+
+				<p:outputLabel for="nome" value="Nome: " />
+				<p:inputText id="nome"
+					value="#{manterFornecedorBean.fornecedor.nome}" />
+
+				<p:outputLabel for="telefone" value="Telefone: " />
+				<p:inputText id="telefone"
+					value="#{manterFornecedorBean.fornecedor.telefone}" />
+
+				<p:outputLabel for="cnpj" value="CNPJ: " />
+				<p:inputText id="cnpj"
+					value="#{manterFornecedorBean.fornecedor.cnpj}" />
+
+				<p:outputLabel for="endereco" value="Endereço: " />
+				<p:inputText id="endereco"
+					value="#{manterFornecedorBean.fornecedor.endereco}" />
+
+				<p:commandButton value="Confirmar"
+					action="#{manterFornecedorBean.salvar}" process="@form"
+					update=":formulario:fornecedoresTable :formulario:growl"
+					oncomplete="PF('editarDialogWidgetVar').hide();" />
+
+
+			</p:panelGrid>
+
+		</p:dialog>
+
+		<p:confirmDialog id="confirmacaoExclusaoDialog"
+			widgetVar="confirmacaoExclusao"
+			message="Tem certeza que deseja excluir o fornecedor #{manterFornecedorBean.fornecedor.nome}?"
+			header="Excluir Fornecedor" severity="alert">
+
+			<p:button icon="pi pi-times" value="Não"
+				onclick="PF('confirmacaoExclusao').hide(); return false;" />
+
+			<p:commandButton icon="pi pi-check" value="Sim"
+				action="#{manterFornecedorBean.excluir}"
+				update=":formulario:fornecedoresTable :formulario:growl"
+				process="@this" oncomplete="PF('confirmacaoExclusao').hide();" />
+		</p:confirmDialog>
+
+	</h:form>
+</h:body>
+</html>

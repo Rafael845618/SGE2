@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+	<title>SGE</title>
+	<style>
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4; /* Fundo claro */
+	font-family: 'Segoe UI', sans-serif;
+	color: #333; /* Cor do texto escura */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.container {
+	background-color: #ffffff; /* Cor de fundo clara para a caixa */
+	padding: 60px 40px;
+	border-radius: 12px;
+	box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); /* Sombras mais suaves */
+	width: 500px;
+	text-align: center;
+}
+
+h1 {
+	margin-bottom: 40px;
+	color: #333; /* Cor escura para o título */
+	font-size: 28px;
+}
+
+.btn {
+	display: block;
+	width: 100%;
+	margin: 12px 0;
+	padding: 16px;
+	font-size: 18px;
+	font-weight: bold;
+	color: #fff; /* Cor do texto do botão */
+	background-color: #2a2a2a; /* Cor de fundo do botão */
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+	background-color: #007BFF; /* Azul claro no hover */
+	transform: scale(1.02);
+}
+
+.btn:focus {
+	outline: none; /* Remover a borda de foco padrão */
+}
+</style>
+</h:head>
+<h:body>
+	<div class="container">
+		<h1>Bem-vindo ao SGE</h1>
+
+		<h:form>
+			<h:commandButton value="Cadastro de Usuario" action="/Usuario/manterUsuario.xhtml"
+				styleClass="btn" />
+			<h:commandButton value="Cadastro de Fornecedor"
+				action="/Fornecedores/manterFornecedores.xhtml" styleClass="btn" />
+			<h:commandButton value="Cadastro de Fabricante"
+				action="/Fabricante/manterFabricantes.xhtml" styleClass="btn" />
+			<h:commandButton value="Estoque" action="/Produto/manterProduto.xhtml"
+				styleClass="btn" />
+			<h:form>
+				<h:commandButton value="Sair" action="#{loginBean.logout}"
+					styleClass="btn" />
+			</h:form>
+
+		</h:form>
+	</div>
+</h:body>
+</html>

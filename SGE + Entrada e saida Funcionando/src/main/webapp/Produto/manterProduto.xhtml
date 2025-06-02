@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cadastro de Produto</title>
+	<style>
+.labelColumn {
+	width: 30%;
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+.inputColumn {
+	width: 70%;
+}
+
+.qtdZero {
+	color: red;
+	font-weight: bold;
+}
+</style>
+</h:head>
+
+<h:body>
+	<h:form id="formulario">
+
+		<p:growl id="growl" showDetail="true" />
+
+		<!--──────────────── Toolbar ────────────────-->
+		<p:toolbar style="margin-top:20px">
+			<p:toolbarGroup>
+				<h:panelGroup layout="block" style="margin-bottom:5px">
+					<h2>Estoque</h2>
+				</h:panelGroup>
+
+				<p:commandButton icon="pi pi-arrow-left" value="Voltar"
+					action="/Opções/opcoes.xhtml?faces-redirect=true" process="@this"
+					style="margin-left:10px" />
+
+				<p:commandButton icon="pi pi-plus" value="Novo"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update="editarDialog" process="@this" style="margin-left:10px" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<!--──────────────── Tabela ─────────────────-->
+		<p:dataTable id="produtosTable" var="produto"
+			value="#{manterProdutoBean.produtos}" showGridlines="true"
+			style="margin-top:20px" emptyMessage="Nenhum produto encontrado."
+			rows="10" paginator="true" paginatorAlwaysVisible="true"
+			paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+
+			<p:column headerText="Id" style="width:30px;text-align:center">
+				<h:outputText value="#{produto.id}" />
+			</p:column>
+
+			<p:column headerText="Nome" sortBy="#{produto.nome}"
+				filterBy="#{produto.nome}" style="width:95px;text-align:left">
+				<h:outputText value="#{produto.nome}" />
+			</p:column>
+
+			<p:column headerText="Descrição" filterBy="#{produto.descricao}"
+				style="width:95px;text-align:left">
+				<h:outputText value="#{produto.descricao}" />
+			</p:column>
+
+			<p:column headerText="Tipo" filterBy="#{produto.tipo}"
+				style="width:90px;text-align:left">
+				<h:outputText value="#{produto.tipo}" />
+			</p:column>
+
+			<p:column headerText="Fornecedor" filterBy="#{produto.fornecedor}"
+				style="width:90px;text-align:left">
+				<h:outputText value="#{produto.fornecedor.nome}" />
+			</p:column>
+
+			<p:column headerText="Fabricante" filterBy="#{produto.fabricante}"
+				style="width:90px;text-align:left">
+				<h:outputText value="#{produto.fabricante.nome}" />
+			</p:column>
+
+			<!--── Quantidade com cor dinâmica ──-->
+			<p:column headerText="Quantidade" filterBy="#{produto.quantidade}"
+				style="width:90px;text-align:left">
+				<h:outputText value="#{produto.quantidade}"
+					styleClass="#{produto.quantidade eq 0 ? 'qtdZero' : ''}" />
+			</p:column>
+
+			<!--──────────── Coluna Opções ────────────-->
+			<p:column headerText="Opções" style="width:90px;text-align:center">
+				<!-- Entrada -->
+				<p:commandButton icon="pi pi-plus-circle"
+					styleClass="ui-button-success" title="Entrada de produto"
+					oncomplete="PF('dlgMov').show()" update=":formulario:dlgMov"
+					process="@this">
+					<f:setPropertyActionListener target="#{manterProdutoBean.produto}"
+						value="#{produto}" />
+					<f:setPropertyActionListener target="#{manterProdutoBean.tipoMov}"
+						value="entrada" />
+				</p:commandButton>
+
+				<!-- Saída -->
+				<p:commandButton icon="pi pi-minus-circle"
+					styleClass="ui-button-warning" title="Saída de produto"
+					oncomplete="PF('dlgMov').show()" update=":formulario:dlgMov"
+					process="@this">
+					<f:setPropertyActionListener target="#{manterProdutoBean.produto}"
+						value="#{produto}" />
+					<f:setPropertyActionListener target="#{manterProdutoBean.tipoMov}"
+						value="saida" />
+				</p:commandButton>
+
+				<!-- Editar -->
+				<p:commandButton icon="pi pi-pencil" title="Editar"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update=":formulario:editarDialog" process="@this">
+					<f:setPropertyActionListener target="#{manterProdutoBean.produto}"
+						value="#{produto}" />
+				</p:commandButton>
+
+				<!-- Excluir -->
+				<p:commandButton icon="pi pi-trash" title="Excluir"
+					onclick="PF('confirmacaoExclusao').show();" process="@this">
+					<f:setPropertyActionListener target="#{manterProdutoBean.produto}"
+						value="#{produto}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+		<!--──────────────── Diálogo Edição ──────────-->
+		<p:dialog id="editarDialog" widgetVar="editarDialogWidgetVar"
+			header="Produto" modal="true" resizable="true" closeOnEscape="true"
+			width="100%" position="center top" maximizable="true" height="70%"
+			fitViewport="true" responsive="true">
+
+			<p:panelGrid id="grid" columns="2"
+				columnClasses="labelColumn,inputColumn" style="width:100%">
+
+				<p:outputLabel for="nome" value="Nome:" />
+				<p:inputText id="nome" value="#{manterProdutoBean.produto.nome}" />
+
+				<p:outputLabel for="descricao" value="Descrição:" />
+				<p:inputText id="descricao"
+					value="#{manterProdutoBean.produto.descricao}" />
+
+				<p:outputLabel for="tipo" value="Tipo:" />
+				<p:inputText id="tipo" value="#{manterProdutoBean.produto.tipo}" />
+
+				<p:outputLabel for="fornecedor" value="Fornecedor:" />
+				<p:selectOneMenu id="fornecedor"
+					value="#{manterProdutoBean.produto.fornecedor}"
+					converter="omnifaces.SelectItemsConverter">
+					<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
+					<f:selectItems value="#{manterProdutoBean.fornecedores}" var="f"
+						itemValue="#{f}" itemLabel="#{f.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="fabricante" value="Fabricante:" />
+				<p:selectOneMenu id="fabricante"
+					value="#{manterProdutoBean.produto.fabricante}"
+					converter="omnifaces.SelectItemsConverter">
+					<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
+					<f:selectItems value="#{manterProdutoBean.fabricantes}" var="fab"
+						itemValue="#{fab}" itemLabel="#{fab.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="quantidade" value="Quantidade:" />
+				<p:inputText id="quantidade"
+					value="#{manterProdutoBean.produto.quantidade}" />
+
+				<f:facet name="footer">
+					<p:commandButton value="Confirmar"
+						action="#{manterProdutoBean.salvar}" process="@form"
+						update=":formulario:produtosTable :formulario:growl"
+						oncomplete="PF('editarDialogWidgetVar').hide()" />
+				</f:facet>
+			</p:panelGrid>
+		</p:dialog>
+
+		<!-- Diálogo Entrada/Saída -->
+		<p:dialog id="dlgMov" widgetVar="dlgMov" modal="true"
+			resizable="false" header="Movimentação" closable="true">
+
+			<!-- FORMULÁRIO EXCLUSIVO PARA A MOVIMENTAÇÃO -->
+			<h:form id="movForm">
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="Produto:" />
+					<h:outputText value="#{manterProdutoBean.produto.nome}" />
+
+					<h:outputText value="Tipo:" />
+					<h:outputText
+						value="#{manterProdutoBean.tipoMov eq 'entrada' ? 'Entrada' : 'Saída'}" />
+
+					<h:outputText value="Quantidade:" for="qtdMov" />
+					<h:inputText id="qtdMov" value="#{manterProdutoBean.quantidadeMov}" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Confirmar" icon="pi pi-check"
+							action="#{manterProdutoBean.movimentar}" process="@this qtdMov"
+							update=":formulario:produtosTable :formulario:growl"
+							oncomplete="PF('dlgMov').hide()" />
+
+						<p:commandButton value="Cancelar" type="button" icon="pi pi-times"
+							onclick="PF('dlgMov').hide()" />
+					</f:facet>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<!--──────────────── Diálogo Excluir ─────────-->
+		<p:confirmDialog id="confirmacaoExclusaoDialog"
+			widgetVar="confirmacaoExclusao"
+			message="Tem certeza que deseja excluir o produto #{manterProdutoBean.produto.nome}?"
+			header="Excluir Produto" severity="alert">
+			<p:commandButton value="Sim" icon="pi pi-check"
+				action="#{manterProdutoBean.excluir}" process="@this"
+				update=":formulario:produtosTable :formulario:growl"
+				oncomplete="PF('confirmacaoExclusao').hide()" />
+			<p:button value="Não" icon="pi pi-times"
+				onclick="PF('confirmacaoExclusao').hide();return false;" />
+		</p:confirmDialog>
+
+	</h:form>
+</h:body>
+</html>

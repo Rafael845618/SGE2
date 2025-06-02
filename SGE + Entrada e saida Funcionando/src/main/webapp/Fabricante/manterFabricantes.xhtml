@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cadastro de Fabricante</title>
+</h:head>
+
+<h:body>
+	<h:form id="formulario">
+
+
+
+		<p:growl id="growl" showDetail="true" />
+
+		<p:toolbar style="margin-top: 20px">
+			<p:toolbarGroup>
+				<h:panelGroup layout="block" style="margin-bottom: 5px ;">
+					<h2>Fabricantes</h2>
+				</h:panelGroup>
+
+
+				<p:commandButton icon="pi pi-arrow-left" value="Voltar"
+					id="botaoVoltar" action="/Opções/opcoes.xhtml?faces-redirect=true"
+					process="@this" style="margin-left: 10px;" />
+
+				<p:commandButton icon="pi pi-plus" value="Novo" id="botaoNovo"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update="editarDialog" process="@this" style="margin-left: 10px;" />
+
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<p:dataTable id="fabricantesTable" var="fabricante"
+			showGridlines="true" value="#{manterFabricanteBean.fabricantes}"
+			style="margin-top: 20px" emptyMessage="Nenhum fabricante encontrado."
+			rows="10" paginator="true" paginatorAlwaysVisible="true"
+			paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+
+			<p:column headerText="Id" style="width: 30px; text-align: center">
+				<h:outputText value="#{fabricante.id}" />
+			</p:column>
+
+			<p:column headerText="Nome" sortBy="#{fabricante.nome}"
+				style="width: 95px; text-align: left" filterBy="#{fabricante.nome}">
+				<h:outputText value="#{fabricante.nome}" />
+			</p:column>
+
+			<p:column headerText="Email" style="width: 95px; text-align: left"
+				filterBy="#{fabricante.email}">
+				<h:outputText value="#{fabricante.email}" />
+			</p:column>
+
+			<p:column headerText="CNPJ"
+				style="width: 95px; 
+			text-align: left"
+				filterBy="#{fabricante.cnpj}">
+				<h:outputText value="#{fabricante.cnpj}" />
+			</p:column>
+
+			<p:column headerText="Endereço" style="width: 95px; text-align: left"
+				filterBy="#{fabricante.endereco}">
+				<h:outputText value="#{fabricante.endereco}" />
+			</p:column>
+
+
+			<p:column headerText="Opções" style="width: 40px; text-align: center">
+
+				<p:commandButton icon="pi pi-pencil" title="Editar"
+					oncomplete="PF('editarDialogWidgetVar').show()"
+					update=":formulario:editarDialog" process="@this">
+					<f:setPropertyActionListener
+						target="#{manterFabricanteBean.fabricante}" value="#{fabricante}" />
+				</p:commandButton>
+
+				<p:commandButton icon="pi pi-trash" title="Excluir"
+					onclick="PF('confirmacaoExclusao').show();" process="@this">
+					<f:setPropertyActionListener
+						target="#{manterFabricanteBean.fabricante}" value="#{fabricante}" />
+				</p:commandButton>
+
+			</p:column>
+
+		</p:dataTable>
+
+		<p:dialog id="editarDialog" header="Fabricante"
+			widgetVar="editarDialogWidgetVar" modal="true" resizable="true"
+			closeOnEscape="true" showEffect="explode" hideEffect="explode"
+			width="100%" position="center top" maximizable="true" height="70%"
+			fitViewport="true" responsive="true">
+
+			<p:panelGrid id="grid" columns="4">
+
+				<p:outputLabel for="nome" value="Nome: " />
+				<p:inputText id="nome"
+					value="#{manterFabricanteBean.fabricante.nome}" />
+
+				<p:outputLabel for="email" value="Email: " />
+				<p:inputText id="email"
+					value="#{manterFabricanteBean.fabricante.email}" />
+
+				<p:outputLabel for="cnpj" value="CNPJ: " />
+				<p:inputText id="cnpj"
+					value="#{manterFabricanteBean.fabricante.cnpj}" />
+
+				<p:outputLabel for="endereco" value="Endereço: " />
+				<p:inputText id="endereco"
+					value="#{manterFabricanteBean.fabricante.endereco}" />
+
+				<p:commandButton value="Confirmar"
+					action="#{manterFabricanteBean.salvar}" process="@form"
+					update=":formulario:fabricantesTable :formulario:growl"
+					oncomplete="PF('editarDialogWidgetVar').hide();" />
+
+
+			</p:panelGrid>
+
+		</p:dialog>
+
+		<p:confirmDialog id="confirmacaoExclusaoDialog"
+			widgetVar="confirmacaoExclusao"
+			message="Tem certeza que deseja excluir o fabricante #{manterFabricanteBean.fabricante.nome}?"
+			header="Excluir Fabricante" severity="alert">
+
+			<p:button icon="pi pi-times" value="Não"
+				onclick="PF('confirmacaoExclusao').hide(); return false;" />
+
+			<p:commandButton icon="pi pi-check" value="Sim"
+				action="#{manterFabricanteBean.excluir}"
+				update=":formulario:fabricantesTable :formulario:growl"
+				process="@this" oncomplete="PF('confirmacaoExclusao').hide();" />
+		</p:confirmDialog>
+
+	</h:form>
+</h:body>
+</html>
